@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Solongo Ulziibadrakh</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=Caveat:wght@400;600&display=swap">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — washed linen × denim blue
+       Layout: full-width sections, centered max-1100 content,
+       masonry photo grid, star-trail cursor
+    ============================================================ */
+    :root {
+      --bg:         #F8F6F2;
+      --bg-2:       #EEF0F5;
+      --fg:         #1C2340;
+      --fg-mid:     #3D5078;
+      --fg-muted:   #7A8BAA;
+      --accent:     #4A6FA5;
+      --accent-lt:  #D6E0F0;
+      --border:     #C8D0E0;
+      --tag-bg:     #E0E8F4;
+      --tag-fg:     #2D4A7A;
+
+      --font-display: 'Archivo Black', Georgia, sans-serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-hand:    'Caveat', cursive;
+
+      color-scheme: light;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg:         #0F1420;
+        --bg-2:       #161D2E;
+        --fg:         #E8EDF8;
+        --fg-mid:     #A0ADCC;
+        --fg-muted:   #5A6A8A;
+        --accent:     #7EA8D8;
+        --accent-lt:  #1A2440;
+        --border:     #253050;
+        --tag-bg:     #1C2840;
+        --tag-fg:     #9ABEE8;
+        color-scheme: dark;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg:         #0F1420;
+      --bg-2:       #161D2E;
+      --fg:         #E8EDF8;
+      --fg-mid:     #A0ADCC;
+      --fg-muted:   #5A6A8A;
+      --accent:     #7EA8D8;
+      --accent-lt:  #1A2440;
+      --border:     #253050;
+      --tag-bg:     #1C2840;
+      --tag-fg:     #9ABEE8;
+      color-scheme: dark;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      font-size: 1rem;
+      line-height: 1.65;
+      padding-left: max(0px, env(safe-area-inset-left, 0px));
+      padding-right: max(0px, env(safe-area-inset-right, 0px));
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; display: block; }
+
+    /* ============================================================
+       CURSOR STARS
+    ============================================================ */
+    .cursor-star {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      font-size: 1rem;
+      color: var(--accent);
+      transition: opacity 0.3s, transform 0.1s;
+      user-select: none;
+      line-height: 1;
+    }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    .nav {
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px dashed var(--border);
+      padding-block: 0.85rem;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--fg-mid);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      color: var(--fg-mid);
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: background 0.2s, color 0.2s;
+    }
+    .theme-toggle:hover { background: var(--accent-lt); color: var(--accent); }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--fg);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1rem max(16px, env(safe-area-inset-left, 0px));
+      border-top: 1px dashed var(--border);
+      background: var(--bg);
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--fg-mid);
+      padding: 0.35rem 0;
+    }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+    }
+
+    /* ============================================================
+       SECTION WRAPPER
+    ============================================================ */
+    .section {
+      padding-block: 5rem;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+
+    .section--alt {
+      background: var(--bg-2);
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-eyebrow {
+      font-family: var(--font-hand);
+      font-size: 1rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      color: var(--fg);
+      line-height: 1.15;
+      text-wrap: balance;
+      margin-bottom: 2.5rem;
+    }
+
+    hr.section-divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 0;
+    }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    .hero {
+      padding-block: 6rem 5rem;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-hand);
+      font-size: 1.1rem;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--fg);
+      text-wrap: balance;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-name em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--fg-mid);
+      max-width: 520px;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+
+    .hero-cta-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      font-family: var(--font-body);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+    }
+    .btn-primary:hover { opacity: 0.88; text-decoration: none; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .btn-outline:hover { background: var(--accent-lt); text-decoration: none; }
+
+    .hero-deco {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      opacity: 0.18;
+      font-size: 4rem;
+      color: var(--accent);
+      user-select: none;
+      line-height: 1;
+    }
+
+    @media (max-width: 700px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-deco { display: none; }
+    }
+
+    /* ============================================================
+       ABOUT
+    ============================================================ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .about-text p + p { margin-top: 1rem; }
+    .about-text p { color: var(--fg-mid); line-height: 1.75; }
+
+    .about-facts {
+      background: var(--accent-lt);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.6rem;
+      transform: rotate(0.6deg);
+      clip-path: polygon(0 0, 100% 0, 100% 96%, 97% 100%, 0 100%);
+    }
+
+    .about-facts-title {
+      font-family: var(--font-hand);
+      font-size: 1.25rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .fact-row {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0.9rem;
+    }
+
+    .fact-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--fg-muted);
+    }
+
+    .fact-value {
+      font-size: 0.9rem;
+      color: var(--fg);
+      font-weight: 500;
+    }
+
+    @media (max-width: 820px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-facts { transform: none; clip-path: none; }
+    }
+
+    /* ============================================================
+       EDUCATION / TIMELINE
+    ============================================================ */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 120px 1px 1fr;
+      gap: 0 1.5rem;
+      padding-bottom: 2.5rem;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-date {
+      text-align: right;
+      padding-top: 0.1rem;
+      font-size: 0.82rem;
+      color: var(--fg-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .timeline-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.3rem;
+    }
+
+    .timeline-track {
+      flex: 1;
+      width: 1px;
+      background: var(--border);
+      margin-top: 4px;
+      border-left: 1px dashed var(--border);
+    }
+
+    .timeline-item:last-child .timeline-track { display: none; }
+
+    .timeline-body {
+      min-width: 0;
+    }
+
+    .timeline-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--fg);
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-sub {
+      font-size: 0.88rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--fg-mid);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .timeline-item { grid-template-columns: 80px 1px 1fr; gap: 0 1rem; }
+      .timeline-date { font-size: 0.75rem; }
+    }
+
+    /* ============================================================
+       AWARDS
+    ============================================================ */
+    .awards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .award-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.4rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .award-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    .award-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .award-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--fg);
+      margin-bottom: 0.3rem;
+      line-height: 1.3;
+    }
+
+    .award-org {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    .award-desc {
+      font-size: 0.85rem;
+      color: var(--fg-mid);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       PROJECTS
+    ============================================================ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 1.2rem;
+      padding: 1.6rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .project-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 24px rgba(74,111,165,0.1);
+      transform: translateY(-3px);
+    }
+
+    .project-tag-row {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      background: var(--tag-bg);
+      color: var(--tag-fg);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--fg);
+      line-height: 1.25;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--fg-mid);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .project-links {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 0.25rem;
+    }
+
+    .project-link {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--accent);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.25rem 0.75rem;
+      transition: background 0.2s;
+    }
+    .project-link:hover { background: var(--accent-lt); text-decoration: none; }
+
+    /* ============================================================
+       PHOTOS & MEMORIES
+    ============================================================ */
+    .photos-intro {
+      font-size: 1rem;
+      color: var(--fg-mid);
+      margin-top: -1.5rem;
+      margin-bottom: 2rem;
+      font-family: var(--font-hand);
+      font-size: 1.15rem;
+    }
+
+    .photo-grid {
+      columns: 3 280px;
+      column-gap: 1.25rem;
+      gap: 1.25rem;
+    }
+
+    .photo-item {
+      break-inside: avoid;
+      margin-bottom: 1.25rem;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 0.9rem;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .photo-item:hover {
+      transform: scale(1.02) rotate(0.3deg);
+      box-shadow: 0 6px 28px rgba(74,111,165,0.12);
+    }
+
+    .photo-img-wrap {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--accent-lt);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--accent);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .photo-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--fg-muted);
+    }
+
+    .photo-placeholder span {
+      font-family: var(--font-hand);
+      font-size: 0.9rem;
+    }
+
+    .photo-caption {
+      font-family: var(--font-hand);
+      font-size: 1.05rem;
+      color: var(--fg-mid);
+      padding: 0.65rem 0.9rem 0.75rem;
+      line-height: 1.3;
+      background: var(--bg-2);
+    }
+
+    /* Slight tilt variation on captions */
+    .photo-item:nth-child(3n+1) .photo-caption { transform: rotate(-0.8deg); }
+    .photo-item:nth-child(3n+2) .photo-caption { transform: rotate(0.5deg); }
+    .photo-item:nth-child(3n+3) .photo-caption { transform: rotate(-0.3deg); }
+
+    /* ============================================================
+       ACTIVITIES
+    ============================================================ */
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .activity-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.25rem 1.4rem;
+      transition: border-color 0.2s;
+    }
+    .activity-card:hover { border-color: var(--accent); }
+
+    .activity-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--fg);
+      margin-bottom: 0.25rem;
+    }
+
+    .activity-role {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .activity-desc {
+      font-size: 0.85rem;
+      color: var(--fg-mid);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       SKILLS
+    ============================================================ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 2rem;
+    }
+
+    .skill-category {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .skill-category-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--fg-muted);
+      border-bottom: 1px dashed var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--tag-bg);
+      color: var(--tag-fg);
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      transition: background 0.2s;
+    }
+    .skill-tag::before { content: "✦"; font-size: 0.6rem; opacity: 0.7; }
+    .skill-tag:hover { background: var(--accent-lt); }
+
+    /* ============================================================
+       CV DOWNLOAD
+    ============================================================ */
+    .cv-section {
+      text-align: center;
+      padding-block: 4rem;
+    }
+
+    .cv-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cv-card {
+      background: var(--accent-lt);
+      border: 1px dashed var(--accent);
+      border-radius: 1.4rem;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .cv-star {
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .cv-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--fg);
+    }
+
+    .cv-desc {
+      font-size: 0.9rem;
+      color: var(--fg-mid);
+      max-width: 380px;
+      text-align: center;
+    }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-desc {
+      font-size: 1rem;
+      color: var(--fg-mid);
+      line-height: 1.7;
+    }
+
+    .contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .contact-detail-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--fg-muted);
+    }
+
+    .contact-detail-value {
+      font-size: 0.95rem;
+      color: var(--fg);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .copy-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--fg-muted);
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--fg-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      padding: 0.65rem 0.9rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--fg);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .form-group textarea { min-height: 110px; }
+
+    .form-note {
+      font-size: 0.78rem;
+      color: var(--fg-muted);
+      font-style: italic;
+    }
+
+    @media (max-width: 700px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      border-top: 1px dashed var(--border);
+      padding-block: 2rem;
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+    }
+
+    .footer-hand {
+      font-family: var(--font-hand);
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    .toast {
+      position: fixed;
+      bottom: max(1.5rem, env(safe-area-inset-bottom, 0px));
+      right: max(1.5rem, env(safe-area-inset-right, 0px));
+      background: var(--fg);
+      color: var(--bg);
+      font-size: 0.85rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.25s, transform 0.25s;
+      font-family: var(--font-body);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       RESPONSIVE HELPERS
+    ============================================================ */
+    @media (max-width: 820px) {
+      .photo-grid { columns: 2 220px; }
+    }
+    @media (max-width: 500px) {
+      .photo-grid { columns: 1; }
+      .projects-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="top">
+    <div class="nav-inner">
+      <a href="#top" class="nav-logo">Solongo <span>✦</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#education">Education</a></li>
+        <li><a href="#awards">Activities</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#photos">Photos</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀ / ☽</button>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#about" class="mobile-link">About</a>
+      <a href="#education" class="mobile-link">Education</a>
+      <a href="#awards" class="mobile-link">Activities</a>
+      <a href="#projects" class="mobile-link">Projects</a>
+      <a href="#photos" class="mobile-link">Photos</a>
+      <a href="#skills" class="mobile-link">Skills</a>
+      <a href="#contact" class="mobile-link">Contact</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="hero-eyebrow">✦ University Applicant · Class of 2027 ✦</p>
+        <h1 class="hero-name">Solongo<br /><em>Ulziibadrakh</em></h1>
+        <p class="hero-desc">
+          Passionate about math, chemistry, and understanding the world through business studies.
+          Currently at the Mongol Aspirtion International Labrotary School, building things that matter.
+        </p>
+        <div class="hero-cta-row">
+          <a href="#projects" class="btn btn-primary">See my work</a>
+          <a href="#contact" class="btn btn-outline">Get in touch</a>
+        </div>
+      </div>
+      <div class="hero-deco" aria-hidden="true">
+        <span>✦</span>
+        <span style="font-size:2rem;">✦</span>
+        <span>✦</span>
+        <span style="font-size:2.5rem;">✦</span>
+        <span style="font-size:1.5rem;">✦</span>
+      </div>
+    </div>
+  </header>
+
+  <hr class="section-divider" />
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ About Me</span>
+      <h2 class="section-title">Who I Am</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>
+            Hi! I'm Solongo — a student at MAIS with a deep love for
+            business studies, chemistry, and the intersections between them. I believe in learning
+            by building: whether that means teaching others a tiny piece of what I have learned and gained , diving into a real life problem,
+            or dreaming up a new project.
+          </p>
+          <p>
+            Outside of academics I enjoy tutoring, reading, and finding meaning in every other aspect through business lens.
+          </p>
+          <p>
+            I've competed in math olympiads, built my own website portfolio, and found joy in every subject
+            that makes me think harder. I come from Mongolia and carry that perspective everywhere I go.
+          </p>
+        </div>
+        <aside class="about-facts">
+          <p class="about-facts-title">✦ Quick facts</p>
+          <div class="fact-row">
+            <span class="fact-label">School</span>
+            <span class="fact-value">Mongol Aspiration ISL</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Graduation</span>
+            <span class="fact-value">Class of 2027</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Location</span>
+            <span class="fact-value">Ulaanbaatar, Mongolia</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Focus areas</span>
+            <span class="fact-value">Math · Chemistry ·  Business Studies</span>
+          </div>
+          <div class="fact-row">
+            <span class="fact-label">Languages</span>
+            <span class="fact-value">Mongolian, English</span>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- EDUCATION -->
+  <section class="section section--alt" id="education">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ Education</span>
+      <h2 class="section-title">Academic Path</h2>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2023 – Present</div>
+          <div class="timeline-line">
+            <div class="timeline-dot"></div>
+            <div class="timeline-track"></div>
+          </div>
+          <div class="timeline-body">
+            <h3 class="timeline-title">Mongol Aspiration ISL</h3>
+            <p class="timeline-sub">High School Diploma · Expected 2027</p>
+            <p class="timeline-desc">
+             A level-aligned curriculum with a strong focus on mathematics, sciences, and humanities.
+              Active participant in academics and extracurricular initiatives.
+            </p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2019 – 2023</div>
+          <div class="timeline-line">
+            <div class="timeline-dot"></div>
+            <div class="timeline-track"></div>
+          </div>
+          <div class="timeline-body">
+            <h3 class="timeline-title">Middle School (84th school)</h3>
+            <p class="timeline-sub">Ulaanbaatar, Mongolia</p>
+            <p class="timeline-desc">
+              Built a foundation in mathematics. First exposure to olimpiad math and competitive math.
+            </p>
+          </div>
+        </div>
+
+        
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- AWARDS -->
+  <section class="section" id="awards">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ Recognition</span>
+      <h2 class="section-title">Awards & Honors</h2>
+      <div class="awards-grid">
+
+        <div class="award-card">
+          <div class="award-icon">💖</div>
+          <h3 class="award-title">Mongol Aspiration Red Cross</h3>
+          <p class="award-org">2023-2026</p>
+          <p class="award-desc">Active member</p>
+        </div>
+
+        <div class="award-card">
+          <div class="award-icon">💻</div>
+          <h3 class="award-title">Coordinator of MAIS Shark Tank 2026</h3>
+          <p class="award-org">2026</p>
+          <p class="award-desc">Contributed my efforts in the 2025 MAST through logistic works. In the 2026 MAST I cam back as the main Coordinator, lockign together everyones effort in this unique event. We brought a changing aspect this year, by allowing more students from other schools(Aplus, 166th school), creating a more competitive enviroment. A red ocean. </p>
+        </div>
+
+        <div class="award-card">
+          <div class="award-icon">📊</div>
+          <h3 class="award-title">COP17 Volunteer</h3>
+          <p class="award-org">2026 Summer</p>
+          <p class="award-desc">Volunteer, COP17 (2026): Supported international delegates, assisted with event logistics, and helped ensure smooth daily operations.</p>
+        </div>
+
+        <div class="award-card">
+          <div class="award-icon">🌟</div>
+          <h3 class="award-title">Teen Solution Competition</h3>
+          <p class="award-org">Mongolia, 2025</p>
+          <p class="award-desc">Developed and polished a sustainable solution about plastic wastes in Ulaanbaatar. Placed in the TOP 10 out of hundred teams. Further developed the idea into a Passion project and thought plarn crocheting at the Magic Land Orphanage. </p>
+        </div>
+
+        <div class="award-card">
+          <div class="award-icon">🔬</div>
+          <h3 class="award-title">Phytoremediation of Zinnia</h3>
+          <p class="award-org">MAIS Science Fair · 2025</p>
+          <p class="award-desc">Presented an team research project on the growth of Zinnia flower in polluted soil similar to that of Mongolia. </p>
+        </div>
+
+        <div class="award-card">
+          <div class="award-icon">✦</div>
+          <h3 class="award-title">Founder and President of the Book Club</h3>
+          <p class="award-org">2024 · 2026</p>
+          <p class="award-desc">Helped organize book festivals at MAIS since my sophomore year, founded the Book Club MAIS. Leading the club in my second year.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- PROJECTS -->
+  <section class="section section--alt" id="projects">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ Projects</span>
+      <h2 class="section-title">Things I've Built</h2>
+      <div class="projects-grid">
+
+        
+
+        
+        <article class="project-card">
+          <div class="project-tag-row">
+            <span class="tag">JavaScript-HTML-CSS</span>
+            <span class="tag">Personal Website Portfolio</span>
+          </div>
+          <h3 class="project-title">This exact website</h3>
+          <p class="project-desc">
+            A simple project but made through genuine trail and errors of a learner. It took almost 12 months starting from the very beginning by just sketching my dream portfolio on a piece of paper to creating an interactive website.
+          <div class="project-links">
+           
+          </div>
+        </article>
+
+       
+
+        <article class="project-card">
+          <div class="project-tag-row">
+            <span class="tag">More</span>
+            <span class="tag">Coming Soon</span>
+          </div>
+          <h3 class="project-title">Stay tuned for my next project!</h3>
+         
+          <div class="project-links">
+            <a href="#" class="project-link">💖</a>
+          </div>
+        </article>
+
+      
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+ 
+  <section class="section" id="photos">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ Memories</span>
+      <h2 class="section-title">Photos & Moments</h2>
+      <p class="photos-intro">little snapshots from along the way ✦</p>
+
+      
+      <div class="photo-grid">
+        <img src="36269ae3-19fd-4467-a3ba-9d3b25ed5c17.jpg" alt="One of my instants">
+          <div class="photo-img-wrap">
+            <div class="photo-placeholder">
+              <span>📷</span>
+              <span>This is Solongo</span>
+            </div>
+          </div>
+         
+        </div>
+
+        
+
+       
+      
+       
+       
+
+      
+
+      
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+ 
+
+  <!-- SKILLS -->
+  <section class="section" id="skills">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ Toolkit</span>
+      <h2 class="section-title">Skills & Technologies</h2>
+      <div class="skills-grid">
+
+        <div class="skill-category">
+          <p class="skill-category-title">Programming Languages</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">C++</span>
+            <span class="skill-tag">JavaScript</span>
+            
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <p class="skill-category-title">Web & Design</p>
+          <div class="skill-tags">
+            <span class="skill-tag">HTML/CSS</span>
+            <span class="skill-tag">Figma</span>
+            <span class="skill-tag">Responsive Design</span>
+            <span class="skill-tag">Typography</span>
+          </div>
+        </div>
+
+       
+        <div class="skill-category">
+          <p class="skill-category-title">Mathematics</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Further Mathematics 9231</span>
+            <span class="skill-tag">AS & A level Mathematics 9709</span>
+            <span class="skill-tag">Statistics</span>
+            <span class="skill-tag">Linear Algebra</span>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <p class="skill-category-title">Tools & Platforms</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Git</span>
+            <span class="skill-tag">GitHub</span>
+            <span class="skill-tag">VS Code</span>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <p class="skill-category-title">Soft Skills</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Teaching</span>
+            <span class="skill-tag">Research</span>
+            <span class="skill-tag">Writing</span>
+            <span class="skill-tag">Team Leadership</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- CV DOWNLOAD -->
+  <section class="section cv-section" id="cv">
+    <div class="section-inner cv-inner">
+      <div class="cv-card">
+        <div class="cv-star">✦</div>
+        <h2 class="cv-title">Download my CV</h2>
+        <p class="cv-desc">
+          A one-page summary of my academic record, achievements, and experience —
+          ready to share with admissions offices.
+        </p>
+        <a href="solongo-cv.pdf" class="btn btn-primary" target="_blank" rel="noopener">
+          ↓ Download CV (PDF)
+        </a>
+        <p style="font-size:0.78rem; color:var(--fg-muted);">Last updated October 2025</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- CONTACT -->
+  <section class="section section--alt" id="contact">
+    <div class="section-inner">
+      <span class="section-eyebrow">✦ Say Hello</span>
+      <h2 class="section-title">Get in Touch</h2>
+      <div class="contact-grid">
+
+        <div class="contact-info">
+          <p class="contact-desc">
+            I'd love to hear from admissions officers, mentors, collaborators,
+            or anyone curious about what I'm working on. Don't hesitate to reach out.
+          </p>
+
+          <div class="contact-detail">
+            <span class="contact-detail-label">Primary Email</span>
+            <span class="contact-detail-value">
+              ulziibadrakhsolongo@gmail.com
+              <button class="copy-btn" data-copy="ulziibadrakhsolongo@gmail.com">Copy</button>
+            </span>
+          </div>
+
+          <div class="contact-detail">
+            <span class="contact-detail-label">School Email</span>
+            <span class="contact-detail-value">
+              27d_solongo.u@mongolaspiration.edu.mn
+              <button class="copy-btn" data-copy="solongo@asu.edu.mn">Copy</button>
+            </span>
+          </div>
+
+          <div class="contact-detail">
+            <span class="contact-detail-label">Location</span>
+            <span class="contact-detail-value">Ulaanbaatar, Mongolia</span>
+          </div>
+
+          <p class="form-note">
+            Feel free to reach out!
+          </p>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="contact-name">Solongo.U</label>
+            <input type="text" id="contact-name" name="name" placeholder="Jane Smith" autocomplete="name" />
+          </div>
+          <div class="form-group">
+            <label for="contact-email">ulziibadrakhsolongo@gmail.com</label>
+            <input type="email" id="contact-email" name="email" placeholder="jane@example.com" autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="contact-message">Message</label>
+            <textarea id="contact-message" name="message" placeholder="Hi Solongo, I wanted to reach out about…"></textarea>
+          </div>
+          <p class="form-note">This form doesn't send automatically — it'll copy the message for you to paste into your email client.</p>
+          <button type="submit" class="btn btn-primary" style="align-self:flex-start;">
+            Prepare message →
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">© 2026 Solongo Ulziibadrakh · Ulaanbaatar, Mongolia</p>
+      <p class="footer-hand">made with love and late nights</p>
+    </div>
+  </footer>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" aria-live="polite"></div>
+
+  <script>
+    /* ============================================================
+       THEME TOGGLE
+    ============================================================ */
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeToggle');
+
+    function getCurrentTheme() {
+      return root.getAttribute('data-theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    }
+
+    themeBtn.addEventListener('click', () => {
+      const current = getCurrentTheme();
+      root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ============================================================
+       HAMBURGER MENU
+    ============================================================ */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      const open = mobileMenu.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', open);
+    });
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    /* ============================================================
+       COPY BUTTONS
+    ============================================================ */
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const text = btn.dataset.copy;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => {
+            showToast('Copied ✦');
+          }).catch(() => {
+            fallbackCopy(text);
+          });
+        } else {
+          fallbackCopy(text);
+        }
+      });
+    });
+
+    function fallbackCopy(text) {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      el.select();
+      try {
+        document.execCommand('copy');
+        showToast('Copied ✦');
+      } catch (e) {
+        showToast('Could not copy — select manually');
+      }
+      document.body.removeChild(el);
+    }
+
+    /* ============================================================
+       CONTACT FORM
+    ============================================================ */
+    document.getElementById('contactForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      const message = document.getElementById('contact-message').value.trim();
+
+      if (!name || !email || !message) {
+        showToast('Please fill in all fields');
+        return;
+      }
+
+      const formatted = `To: ulziibadrakhsolongo@gmail.com\nFrom: ${name} <${email}>\n\n${message}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(formatted).then(() => {
+          showToast('Message copied — paste into your email ✦');
+        }).catch(() => {
+          showToast('Fill in your email client manually');
+        });
+      } else {
+        showToast('Fill in your email client manually');
+      }
+    });
+
+    /* ============================================================
+       CURSOR STAR TRAIL
+    ============================================================ */
+    const trail = [];
+    const TRAIL_LENGTH = 6;
+
+    for (let i = 0; i < TRAIL_LENGTH; i++) {
+      const star = document.createElement('div');
+      star.className = 'cursor-star';
+      star.textContent = '✦';
+      document.body.appendChild(star);
+      trail.push({ el: star, x: 0, y: 0, opacity: 0 });
+    }
+
+    let mouseX = 0, mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      for (let i = trail.length - 1; i > 0; i--) {
+        trail[i].x = trail[i - 1].x;
+        trail[i].y = trail[i - 1].y;
+      }
+      trail[0].x = mouseX;
+      trail[0].y = mouseY;
+
+      trail.forEach((t, i) => {
+        t.el.style.left = t.x + 'px';
+        t.el.style.top = t.y + 'px';
+        t.el.style.opacity = (1 - i / trail.length) * 0.8;
+        t.el.style.transform = `translate(-50%, -50%) scale(${1 - i * 0.12}) rotate(${i * 15}deg)`;
+      });
+    });
+  </script>
+</body>
+</html>
